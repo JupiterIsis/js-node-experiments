@@ -45,25 +45,27 @@ var session;
 // serve the form, or logout link if the user is already logged in 
 app.get("/", (req, res) => {
     session = req.session
-    if(session.userid){
+    if(session.userId){
         res.send("Welcome User <a href='/logout'>click to logout</a>")
     } else {
         res.sendFile('views/index.html',{root:__dirname})
     }
 })
 
-
+// verify the credentials of the user. If valid, creates a session. If not, no session will be initialized, no cookie will be saved.
 app.post("/user", (req, res) => {
     if(req.body.username == myusername && req.body.password == mypassword){
         session = req.session
         session.userId = req.body.username
         console.log(req.session)
-        res.send(`Hey there, welcome <a href=\'/logout'>click to logout</a>`);
+        res.send(`Hey there, welcome <a href=\'/logout'>click to logout</a>     <div><a href="/">go back</a></div>
+        `);
     } else {
         res.send("Invalid username or password")
     }
 })
 
+// destroys the session once the user decides to log out :)
 app.get("/logout", (req, res) => {
     req.session.destroy()
     res.redirect('/')
